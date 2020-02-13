@@ -1,5 +1,9 @@
 # Mainflux IIoT Distributed MQTT Load Testing.
-Repository contains [mzbench](https://github.com/satori-com/mzbench) production ready scenarios for  Mainflux IIoT MQTT loadtest.
+
+The repository contains [mzbench](https://github.com/satori-com/mzbench) production-ready scenarios for  Mainflux IIoT MQTT load test and detailed reports from running those tests on Kubernetes cluster, hosted on different cloud providers like AWS, GKE, Digitalocean, etc... 
+
+The main purpose is to measure Mainflux MQTT messaging performance and scaling in different production environments with different compute capacity and scenarios.
+It should also help you with a rough estimation of cluster capacity and compute power required for a certain number of concurrent connections or messages per second and monthly costs for such clusters.
 
 ## Introduction
 [Mainflux](https://github.com/mainflux/mainflux) is a scalable, secure, open-source, and patent-free IIoT cloud platform.

@@ -49,15 +49,15 @@ All those layers and network hops add extra delays and milliseconds are importan
 
 ## Scenarios 
 Here is a list of scenarios that we will test.
-- [Fan in](https://github.com/nmarcetic/mainflux-loadtest/scenarios/fan_in.bdlhttps://github.com/nmarcetic/mainflux-loadtest/blob/master/mzbench/scenarios/fan_in.bdl)
-- [Fan out](https://github.com/nmarcetic/mainflux-loadtest/blob/master/mzbench/scenarios/fan_out.bdl)
+- [Fan in](mzbench/scenarios/fan_in.bdl)
+- [Fan out](mzbench/scenarios/fan_out.bdl)
 
 ## Results
 Kubernetes is a defacto standard for production-grade container orchestration, that's why we use Kubernetes in all our test environments with all scenarios. 
 Testing is done on different infrastructures, regarding cluster resources, a number of nodes,  compute power, etc... with different cloud providers.
 Each report contains details about cluster resources, testing scenario, test report and rough monthly cost estimate (its impossible to do precise costs estimation due to variable costs and use case details).
 
-- [x] Digitalocean Kubernetes cluster. Detailed report available [here](https://github.com/nmarcetic/mainflux-loadtest/blob/master/reports/digitalocean.md)
+- [x] Digitalocean Kubernetes cluster. Detailed report available [here](reports/digitalocean.md)
 - [ ] [Google GKE](https://cloud.google.com/kubernetes-engine)
 - [ ] [AWS EKS](https://aws.amazon.com/eks/)
 

@@ -1,0 +1,1 @@
+Report from digitalocean Kubernetes test.

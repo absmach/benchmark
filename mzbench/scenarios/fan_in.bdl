@@ -1,0 +1,59 @@
+#!benchDL
+
+
+#######
+# Scenario:
+# A single subscriber reading from "prefix/clients/#channels/5657a592-3135-48fd-947a-6d030009193c/messages/#" topic filter
+# 100 publisher publishing to exclusive topic "prefix/clients/{client_id}channels/5657a592-3135-48fd-947a-6d030009193c/messages/<client_id>"
+# Overall msg rate: 100 msg/s
+# Message size: 150 random bytes
+# Running time: 5 min
+# Update values in test, according to your values
+# <MQTT_endpoint> = IP/domain of your MQTT endpoint
+# <thing_1_ID> = First thing ID of pre-provisioned Mainflux thing
+# <thing_1_key> = First thing key of pre-provisioned Mainflux thing
+# <thing_2_ID> = Second thing ID of pre-provisioned Mainflux thing
+# <thing_2_key> = Second thing key of pre-provisioned Mainflux thing.
+# <channel> = pre-provisioned channel where thing is connected
+#######
+
+make_install(git = "https://github.com/erlio/vmq_mzbench.git",
+             branch = "master")
+
+pool(size = 1,
+     worker_type = mqtt_worker):
+
+            connect([t(host, "<MQTT_endpoint>"),
+                    t(port,1883),
+                    t(client,"subscriber1"),
+                    t(clean_session,true),
+                    t(keepalive_interval,60),
+                    t(username, "<thing_1_ID>"),
+                    t(password, "<thing_1_key>"),
+                    t(proto_version,4), t(reconnect_timeout,4)
+                    ])
+
+            wait(1 sec)
+            subscribe("<channel>/#", 0)
+
+
+pool(size = 100,
+     worker_type = mqtt_worker,
+     worker_start = poisson(100 rps)):
+
+            connect([t(host, "<MQTT_endpoint>"),
+                    t(port,1883),
+                    t(client,fixed_client_id("pool1", worker_id())),
+                    t(clean_session,true),
+                    t(keepalive_interval,60),
+                    t(username, "<thing_2_ID>"),
+                    t(password, "<thing_2_key"),
+                    t(proto_version,4), t(reconnect_timeout,4)
+                    ])
+
+            set_signal(connect1, 1)
+            wait_signal(connect1, 100)
+            wait(4 sec)
+            loop(time = 5 min, rate = 1 rps):
+                publish_to_self("<channel>/", random_binary(150), 0)
+            disconnect()

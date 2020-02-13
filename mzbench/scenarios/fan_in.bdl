@@ -3,12 +3,12 @@
 
 #######
 # Scenario:
-# A single subscriber reading from "prefix/clients/#channels/5657a592-3135-48fd-947a-6d030009193c/messages/#" topic filter
-# 100 publisher publishing to exclusive topic "prefix/clients/{client_id}channels/5657a592-3135-48fd-947a-6d030009193c/messages/<client_id>"
+# A single subscriber reading from "channels/5657a592-3135-48fd-947a-6d030009193c/messages/#" topic filter
+# 100 publisher publishing to exclusive topic "channels/5657a592-3135-48fd-947a-6d030009193c/messages/<client_id>"
 # Overall msg rate: 100 msg/s
 # Message size: 150 random bytes
 # Running time: 5 min
-# Update values in test, according to your values
+# NOTE: Update values in test, according to your values
 # <MQTT_endpoint> = IP/domain of your MQTT endpoint
 # <thing_1_ID> = First thing ID of pre-provisioned Mainflux thing
 # <thing_1_key> = First thing key of pre-provisioned Mainflux thing

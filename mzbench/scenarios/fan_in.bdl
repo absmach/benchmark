@@ -1,20 +1,20 @@
 #!benchDL
 
-
 #######
 # Scenario:
-# A single subscriber reading from "channels/5657a592-3135-48fd-947a-6d030009193c/messages/#" topic filter
-# 100 publisher publishing to exclusive topic "channels/5657a592-3135-48fd-947a-6d030009193c/messages/<client_id>"
-# Overall msg rate: 100 msg/s
-# Message size: 150 random bytes
+# A single subscriber reading from "<MF_CHANNEL>/#" topic
+# 10000 publisher publishing to exclusive topic "<MF_CHANNEL>/<client_id>"
+# Overall msg rate: 10 000 msg/s
+# Message size: 100 random bytes
 # Running time: 5 min
+# QoS level: 2
 # NOTE: Update values in test, according to your values
-# <MQTT_endpoint> = IP/domain of your MQTT endpoint
-# <thing_1_ID> = First thing ID of pre-provisioned Mainflux thing
-# <thing_1_key> = First thing key of pre-provisioned Mainflux thing
-# <thing_2_ID> = Second thing ID of pre-provisioned Mainflux thing
-# <thing_2_key> = Second thing key of pre-provisioned Mainflux thing.
-# <channel> = pre-provisioned channel where thing is connected
+# <MF_MQTT_ENPOINT> = IP/domain of your MQTT endpoint
+# <MF_THING_1_ID> = First thing ID of pre-provisioned Mainflux thing
+# <MF_THING_1_key> = First thing key of pre-provisioned Mainflux thing
+# <MF_THING_2_ID> = Second thing ID of pre-provisioned Mainflux thing
+# <MF_THING_2_key> = Second thing key of pre-provisioned Mainflux thing.
+# <MF_CHANNEL> = pre-provisioned channel where thing is connected
 #######
 
 make_install(git = "https://github.com/erlio/vmq_mzbench.git",
@@ -22,38 +22,36 @@ make_install(git = "https://github.com/erlio/vmq_mzbench.git",
 
 pool(size = 1,
      worker_type = mqtt_worker):
-
-            connect([t(host, "<MQTT_endpoint>"),
-                    t(port,1883),
+            connect([t(host, "<MF_MQTT_ENDPOINT"),
+                    t(port, 1883),
                     t(client,"subscriber1"),
                     t(clean_session,true),
                     t(keepalive_interval,60),
-                    t(username, "<thing_1_ID>"),
-                    t(password, "<thing_1_key>"),
+                    t(username, "<MQTT_THING_1_ID>"),
+                    t(password, "<MQTT_THING_1_KEY>"),
                     t(proto_version,4), t(reconnect_timeout,4)
                     ])
 
             wait(1 sec)
-            subscribe("<channel>/#", 0)
+            subscribe("<MF_CHANNEL>/#", 2)
 
 
-pool(size = 100,
+pool(size = 10000,
      worker_type = mqtt_worker,
-     worker_start = poisson(100 rps)):
-
-            connect([t(host, "<MQTT_endpoint>"),
-                    t(port,1883),
-                    t(client,fixed_client_id("pool1", worker_id())),
+     worker_start = poisson(10000 rps)):
+            connect([t(host, "157.245.26.18"),
+                    t(port, 1883),
+                    t(client,fixed_client_id("publisher-", worker_id())),
                     t(clean_session,true),
                     t(keepalive_interval,60),
-                    t(username, "<thing_2_ID>"),
-                    t(password, "<thing_2_key"),
+                    t(username, "<MQTT_THING_2_ID>"),
+                    t(password, "<MQTT_THING_2_KEY>"),
                     t(proto_version,4), t(reconnect_timeout,4)
                     ])
 
             set_signal(connect1, 1)
             wait_signal(connect1, 100)
-            wait(4 sec)
+            wait(5 sec)
             loop(time = 5 min, rate = 1 rps):
-                publish_to_self("<channel>/", random_binary(150), 0)
+                publish_to_self("<MF_CHANNEL>/", random_binary(100), 2)
             disconnect()

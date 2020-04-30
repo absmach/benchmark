@@ -45,8 +45,8 @@ pool(size = numvar("SUB_NUM"),
                     client = fixed_client_id("subscriber", worker_id()),
                     clean_session = true,
                     keepalive_interval = 60,
-                    t(username, var("MQTT_THING_1_ID")),
-                    t(password, var("MQTT_THING_1_KEY")),
+                    username = var("MQTT_THING_1_ID"),
+                    password = var("MQTT_THING_1_KEY"),
                     proto_version = 4,
                     reconnect_timeout = 4
                     )
@@ -65,8 +65,8 @@ pool(size = 1,
                     client = fixed_client_id("publisher", worker_id()),
                     clean_session = true,
                     keepalive_interval = 60,
-                    t(username, var("MQTT_THING_2_ID")),
-                    t(password, var("MQTT_THING_2_KEY")),                    
+                    username = var("MQTT_THING_2_ID"),
+                    password = var("MQTT_THING_2_KEY"),
                     proto_version = 4,
                     reconnect_timeout = 4
                     )

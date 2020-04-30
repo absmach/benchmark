@@ -1,0 +1,79 @@
+#!benchDL
+
+
+#######
+# Broadcast Scenario:
+# 10k subscribers reading from the same topic "channels/<MF_CHANNEL_ID>/messages"
+# 1 publisher sending 1 msg/s to topic "channels/<MF_CHANNEL_ID>/messages"
+# Overall Msg rate: 1k msg/s
+# Message Size: 100 random bytes
+# Runtime: 5 min
+# QoS level: 2
+# NOTE: Update values in defaults or set environment variables according to your values
+# <MF_MQTT_ENPOINT> = IP/domain of your MQTT endpoint
+# <MF_THING_1_ID> = First thing ID of pre-provisioned Mainflux thing
+# <MF_THING_1_key> = First thing key of pre-provisioned Mainflux thing
+# <MF_THING_2_ID> = Second thing ID of pre-provisioned Mainflux thing
+# <MF_THING_2_key> = Second thing key of pre-provisioned Mainflux thing.
+# <MF_CHANNEL> = pre-provisioned channel where thing is connected
+#######
+
+defaults(
+        "SUB_NUM" = 10000,
+        "PUB_TIME" = 5,
+        "PUB_RATE" = 1,
+        "MSG_SIZE" = 100,
+        "QOS" = 2,
+        "MF_MQTT_ENDPOINT" = "127.0.0.1",
+        "MF_MQTT_PORT" = 1883,
+        "MQTT_THING_1_ID" = "<MQTT_THING_1_ID>",
+        "MQTT_THING_1_KEY" = "<MQTT_THING_1_KEY>",
+        "MQTT_THING_2_ID" = "<MQTT_THING_2_ID>",
+        "MQTT_THING_2_KEY" = "<MQTT_THING_2_KEY>",
+        "MF_CHANNEL_ID" = "<MF_CHANNEL_ID>"
+        )
+
+make_install(git = "https://github.com/erlio/vmq_mzbench.git",
+             branch = "master")
+
+pool(size = numvar("SUB_NUM"),
+     worker_type = mqtt_worker,
+     worker_start = poisson(numvar("SUB_NUM") rps)):
+
+            connect(host = var("MF_MQTT_ENDPOINT"),
+                    port = numvar("MF_MQTT_PORT"),
+                    client = fixed_client_id("subscriber_pool1", worker_id()),
+                    clean_session = true,
+                    keepalive_interval = 60,
+                    t(username, var("MQTT_THING_1_ID")),
+                    t(password, var("MQTT_THING_1_KEY")),
+                    proto_version = 4,
+                    reconnect_timeout = 4
+                    )
+
+            set_signal(subscribe1, 1)
+            wait_signal(subscribe1, numvar("SUB_NUM"))
+            wait(10 sec)
+            subscribe(sprintf("channels/~s/messages", [var("MF_CHANNEL_ID")]), numvar("QOS"))
+
+
+pool(size = 1,
+     worker_type = mqtt_worker):
+
+            connect(host = var("MF_MQTT_ENDPOINT"),
+                    port = numvar("MF_MQTT_PORT"),
+                    client = fixed_client_id("publisher_pool1", worker_id()),
+                    clean_session = true,
+                    keepalive_interval = 60,
+                    t(username, var("MQTT_THING_2_ID")),
+                    t(password, var("MQTT_THING_2_KEY")),                    
+                    proto_version = 4,
+                    reconnect_timeout = 4
+                    )
+
+            set_signal(connect1, 1)
+            wait_signal(connect1, 1)
+            wait(4 sec)
+            loop(time = numvar("PUB_TIME") min, rate = numvar("PUB_RATE") rps):
+                publish(sprintf("channels/~s/messages", [var("MF_CHANNEL_ID")]), random_binary(numvar("MSG_SIZE")), numvar("QOS"))
+            disconnect()

@@ -14,7 +14,7 @@
 # <MF_THING_1_KEY> = First thing key of pre-provisioned Mainflux thing
 # <MF_THING_2_ID> = Second thing ID of pre-provisioned Mainflux thing
 # <MF_THING_2_KEY> = Second thing key of pre-provisioned Mainflux thing.
-# <MF_CHANNEL> = pre-provisioned channel where thing is connected
+# <MF_CHANNEL_ID> = pre-provisioned channel id where things are connected
 #######
 
 defaults(

@@ -8,7 +8,7 @@
 # Message size: 100 random bytes
 # Running time: 5 min
 # QoS level: 2
-# NOTE: Update values in test, according to your values
+# NOTE: Update values in defaults or set environment variables according to your values
 # <MF_MQTT_ENPOINT> = IP/domain of your MQTT endpoint
 # <MF_THING_1_ID> = First thing ID of pre-provisioned Mainflux thing
 # <MF_THING_1_key> = First thing key of pre-provisioned Mainflux thing

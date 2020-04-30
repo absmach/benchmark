@@ -18,7 +18,7 @@
 #######
 
 defaults(
-        "PUB_SIZE" = 10000,
+        "PUB_NUM" = 10000,
         "PUB_TIME" = 5,
         "PUB_RATE" = 1,
         "MSG_SIZE" = 100,
@@ -51,9 +51,9 @@ pool(size = 1,
             subscribe(sprintf("channels/~s/messages/#", [var("MF_CHANNEL_ID")]), numvar("QOS"))
 
 
-pool(size = numvar("PUB_SIZE"),
+pool(size = numvar("PUB_NUM"),
      worker_type = mqtt_worker,
-     worker_start = poisson(numvar("PUB_SIZE") rps)):
+     worker_start = poisson(numvar("PUB_NUM") rps)):
             connect([t(host, var("MF_MQTT_ENDPOINT")),
                     t(port, numvar("MF_MQTT_PORT")),
                     t(client,fixed_client_id("publisher", worker_id())),
@@ -65,7 +65,7 @@ pool(size = numvar("PUB_SIZE"),
                     ])
 
             set_signal(connect1, 1)
-            wait_signal(connect1, numvar("PUB_SIZE"))
+            wait_signal(connect1, numvar("PUB_NUM"))
             wait(5 sec)
             loop(time = numvar("PUB_TIME") min, rate = numvar("PUB_RATE") rps):
                 publish_to_self(sprintf("channels/~s/messages/", [var("MF_CHANNEL_ID")]), random_binary(numvar("MSG_SIZE")), numvar("QOS"))

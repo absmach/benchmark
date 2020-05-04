@@ -9,13 +9,15 @@
 # Message Size: 100 random bytes
 # Runtime: 5 min
 # QoS level: 2
-# NOTE: Update values in defaults or set environment variables according to your values
-# <MF_MQTT_ENPOINT> = IP/domain of your MQTT endpoint
-# <MF_THING_1_ID> = First thing ID of pre-provisioned Mainflux thing
-# <MF_THING_1_KEY> = First thing key of pre-provisioned Mainflux thing
-# <MF_THING_2_ID> = Second thing ID of pre-provisioned Mainflux thing
-# <MF_THING_2_KEY> = Second thing key of pre-provisioned Mainflux thing.
-# <MF_CHANNEL> = pre-provisioned channel where thing is connected
+# NOTE: Scenario's values can be changed with environment variables predefined in defaults
+# Set environment variables to connect to Mainflux instance:
+# MF_MQTT_ENPOINT = IP/domain of MQTT endpoint on Mainflux
+# MF_MQTT_PORT = Port of MQTT endpoint on Mainflux
+# MF_THING_1_ID = First thing ID of pre-provisioned Mainflux thing
+# MF_THING_1_KEY = First thing key of pre-provisioned Mainflux thing
+# MF_THING_2_ID = Second thing ID of pre-provisioned Mainflux thing
+# MF_THING_2_KEY = Second thing key of pre-provisioned Mainflux thing.
+# MF_CHANNEL_ID = ID of pre-provisioned channel on which both things are connected
 #######
 
 defaults(
@@ -25,12 +27,7 @@ defaults(
         "MSG_SIZE" = 100,
         "QOS" = 2,
         "MF_MQTT_ENDPOINT" = "127.0.0.1",
-        "MF_MQTT_PORT" = 1883,
-        "MF_THING_1_ID" = "<MF_THING_1_ID>",
-        "MF_THING_1_KEY" = "<MF_THING_1_KEY>",
-        "MF_THING_2_ID" = "<MF_THING_2_ID>",
-        "MF_THING_2_KEY" = "<MF_THING_2_KEY>",
-        "MF_CHANNEL_ID" = "<MF_CHANNEL_ID>"
+        "MF_MQTT_PORT" = 1883
         )
 
 make_install(git = "https://github.com/erlio/vmq_mzbench.git",

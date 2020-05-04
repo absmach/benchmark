@@ -2,56 +2,68 @@
 
 #######
 # Scenario:
-# A single subscriber reading from "<MF_CHANNEL>/#" topic
-# 10000 publisher publishing to exclusive topic "<MF_CHANNEL>/<client_id>"
+# A single subscriber reading from "channels/<MF_MZBENCH_CHANNEL_ID>/messages/#" topic
+# 10000 publisher publishing to exclusive topic "channels/<MF_MZBENCH_CHANNEL_ID>/messages/<client_id>"
 # Overall msg rate: 10 000 msg/s
 # Message size: 100 random bytes
 # Running time: 5 min
 # QoS level: 2
-# NOTE: Update values in test, according to your values
-# <MF_MQTT_ENPOINT> = IP/domain of your MQTT endpoint
-# <MF_THING_1_ID> = First thing ID of pre-provisioned Mainflux thing
-# <MF_THING_1_key> = First thing key of pre-provisioned Mainflux thing
-# <MF_THING_2_ID> = Second thing ID of pre-provisioned Mainflux thing
-# <MF_THING_2_key> = Second thing key of pre-provisioned Mainflux thing.
-# <MF_CHANNEL> = pre-provisioned channel where thing is connected
+# NOTE: Scenario's values can be changed with environment variables predefined in defaults
+# Set environment variables to connect to Mainflux instance:
+# MF_MZBENCH_MQTT_ENPOINT = IP/domain of MQTT endpoint on Mainflux
+# MF_MZBENCH_MQTT_PORT = Port of MQTT endpoint on Mainflux
+# MF_MZBENCH_THING_1_ID = First thing ID of pre-provisioned Mainflux thing
+# MF_MZBENCH_THING_1_KEY = First thing key of pre-provisioned Mainflux thing
+# MF_MZBENCH_THING_2_ID = Second thing ID of pre-provisioned Mainflux thing
+# MF_MZBENCH_THING_2_KEY = Second thing key of pre-provisioned Mainflux thing.
+# MF_MZBENCH_CHANNEL_ID = ID of pre-provisioned channel on which both things are connected
 #######
+
+defaults(
+        "MF_MZBENCH_PUB_NUM" = 10000,
+        "MF_MZBENCH_PUB_TIME" = 5,
+        "MF_MZBENCH_PUB_RATE" = 1,
+        "MF_MZBENCH_MSG_SIZE" = 100,
+        "MF_MZBENCH_QOS" = 2,
+        "MF_MZBENCH_MQTT_ENDPOINT" = "127.0.0.1",
+        "MF_MZBENCH_MQTT_PORT" = 1883
+)
 
 make_install(git = "https://github.com/erlio/vmq_mzbench.git",
              branch = "master")
 
 pool(size = 1,
      worker_type = mqtt_worker):
-            connect([t(host, "<MF_MQTT_ENDPOINT"),
-                    t(port, 1883),
+            connect([t(host, var("MF_MZBENCH_MQTT_ENDPOINT")),
+                    t(port, numvar("MF_MZBENCH_MQTT_PORT")),
                     t(client,"subscriber1"),
                     t(clean_session,true),
                     t(keepalive_interval,60),
-                    t(username, "<MQTT_THING_1_ID>"),
-                    t(password, "<MQTT_THING_1_KEY>"),
+                    t(username, var("MF_MZBENCH_THING_1_ID")),
+                    t(password, var("MF_MZBENCH_THING_1_KEY")),
                     t(proto_version,4), t(reconnect_timeout,4)
                     ])
 
             wait(1 sec)
-            subscribe("<MF_CHANNEL>/#", 2)
+            subscribe(sprintf("channels/~s/messages/#", [var("MF_MZBENCH_CHANNEL_ID")]), numvar("MF_MZBENCH_QOS"))
 
 
-pool(size = 10000,
+pool(size = numvar("MF_MZBENCH_PUB_NUM"),
      worker_type = mqtt_worker,
-     worker_start = poisson(10000 rps)):
-            connect([t(host, "157.245.26.18"),
-                    t(port, 1883),
-                    t(client,fixed_client_id("publisher-", worker_id())),
+     worker_start = poisson(numvar("MF_MZBENCH_PUB_NUM") rps)):
+            connect([t(host, var("MF_MZBENCH_MQTT_ENDPOINT")),
+                    t(port, numvar("MF_MZBENCH_MQTT_PORT")),
+                    t(client,fixed_client_id("publisher", worker_id())),
                     t(clean_session,true),
                     t(keepalive_interval,60),
-                    t(username, "<MQTT_THING_2_ID>"),
-                    t(password, "<MQTT_THING_2_KEY>"),
+                    t(username, var("MF_MZBENCH_THING_2_ID")),
+                    t(password, var("MF_MZBENCH_THING_2_KEY")),
                     t(proto_version,4), t(reconnect_timeout,4)
                     ])
 
             set_signal(connect1, 1)
-            wait_signal(connect1, 100)
+            wait_signal(connect1, numvar("MF_MZBENCH_PUB_NUM"))
             wait(5 sec)
-            loop(time = 5 min, rate = 1 rps):
-                publish_to_self("<MF_CHANNEL>/", random_binary(100), 2)
+            loop(time = numvar("MF_MZBENCH_PUB_TIME") min, rate = numvar("MF_MZBENCH_PUB_RATE") rps):
+                publish_to_self(sprintf("channels/~s/messages/", [var("MF_MZBENCH_CHANNEL_ID")]), random_binary(numvar("MF_MZBENCH_MSG_SIZE")), numvar("MF_MZBENCH_QOS"))
             disconnect()

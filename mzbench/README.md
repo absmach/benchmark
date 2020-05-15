@@ -8,9 +8,9 @@ List of scenarios that we will test.
 - [Fan-out](scenarios/fan_out.bdl)
 
 A prerequisite for running these test scenarios is to have Mainflux instance where you should:
-- create one Channel
-- create two Things
-- connect both Things to Channel
+- Create one Channel
+- Create two Things
+- Connect both Things to Channel
 
 Required parameters are then set with running mzbench with --env param:
 

@@ -1,11 +1,11 @@
 # Scenarios
 
-Folder [scenarios](scenarios/) contains different testing scenarios for MZbench.
+Folder [scenarios](scenarios/) contains .bdl files ([Benchmark Definition Language](https://github.com/mzbench/mzbench/blob/master/doc/scenarios/spec.md)) that represents different testing scenarios for MZbench.
 
 
 List of scenarios that we will test.
-- [Fan in](scenarios/fan_in.bdl)
-- [Fan out](scenarios/fan_out.bdl)
+- [Fan-in](scenarios/fan_in.bdl)
+- [Fan-out](scenarios/fan_out.bdl)
 
 A prerequisite for running these test scenarios is to have Mainflux instance where you should:
 - create one Channel
@@ -16,7 +16,7 @@ Required paramaters are then set with running mzbench with --env param:
 
 `$ ./bin/mzbench run --env foo=bar --env n=42`
 
-Or when using MZBench dashboard by importing and setting environment variables from scenario.
+or when using MZBench dashboard by importing and setting environment variables from scenario.
 
 
 | Environment variable | Description | Default |
@@ -29,11 +29,11 @@ Or when using MZBench dashboard by importing and setting environment variables f
 | MF_MZBENCH_THING_2_ID | Second thing ID of pre-provisioned Mainflux thing | |
 | MF_MZBENCH_THING_2_KEY | Second thing key of pre-provisioned Mainflux thing| |
 
-Scenarios have it's own parameters (like duration of test, rate of publishing...) that are set through environment variables. You can redefine an environment variable even during the benchmark without interrupting the benchmark itself with [change env](https://github.com/mzbench/mzbench/blob/master/doc/cli.md#change_env) command
+Scenarios have it's own parameters (like duration of test, rate of publishing...) that are set through environment variables, also. You can redefine an environment variable even during the benchmark without interrupting the benchmark itself with [change env](https://github.com/mzbench/mzbench/blob/master/doc/cli.md#change_env) command.
 
 ## Fan-in
 
-In Fan-in scenario numerous MQTT clients are sending messages on same Mainflux channel, but every client to exclusive subtopic on that channel. One subscriber is consuming all that messages.
+In fan-in scenario numerous MQTT clients are sending messages on same Mainflux channel, but every client to exclusive subtopic on that channel. One subscriber is consuming all that messages.
 
 | Environment variable | Description | Default |
 | --- | --- | --- |
@@ -45,7 +45,7 @@ In Fan-in scenario numerous MQTT clients are sending messages on same Mainflux c
 
 ## Fan-out
 
-In Fan-out scenario one MQTT client is sending messages on Mainflux channel. Numerous subscribers are connected to that channel and consuming  messages.
+In fan-out scenario one MQTT client is sending messages on Mainflux channel. Numerous subscribers are connected to that channel and consuming  messages.
 
 | Environment variable | Description | Default |
 | --- | --- | --- |

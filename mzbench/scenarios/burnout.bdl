@@ -1,0 +1,54 @@
+defaults(
+        "MF_MZBENCH_PUB_NUM" = 10000,
+        "MF_MZBENCH_PUB_TIME" = 5,
+        "MF_MZBENCH_PUB_RATE" = 1,
+        "MF_MZBENCH_MSG_SIZE" = 100,
+        "MF_MZBENCH_QOS" = 2,
+        "MF_MZBENCH_MQTT_ENDPOINT" = "127.0.0.1",
+        "MF_MZBENCH_MQTT_PORT" = 1883
+)
+
+make_install(git = "https://github.com/erlio/vmq_mzbench.git",
+             branch = "master")
+
+
+pool(size = 2,
+     worker_type = mqtt_worker):
+            connect([t(host, var("MF_MZBENCH_MQTT_ENDPOINT")),
+                    t(port, numvar("MF_MZBENCH_MQTT_PORT")),
+                    t(client,fixed_client_id("subscriber", worker_id())),
+                    t(clean_session,true),
+                    t(keepalive_interval,10),
+                    t(username, var("MF_MZBENCH_THING_1_ID")),
+                    t(password, var("MF_MZBENCH_THING_1_KEY")),
+                    t(proto_version,4), t(reconnect_timeout,4)
+                    ])
+            wait(1 sec)
+            subscribe(sprintf("channels/~s/messages/#", [var("MF_MZBENCH_CHANNEL_ID")]), numvar("MF_MZBENCH_QOS"))
+            # wait until the end of test
+            wait(numvar("MF_MZBENCH_PUB_TIME") min)
+            # additional wait for left messages
+            wait(1 min)
+            
+pool(size = numvar("MF_MZBENCH_PUB_NUM"),
+     worker_type = mqtt_worker,
+     worker_start = poisson(100 rps)):
+            # small pause to confirm subscribers in log
+            wait(30 sec)
+            connect([t(host, var("MF_MZBENCH_MQTT_ENDPOINT")),
+                    t(port, numvar("MF_MZBENCH_MQTT_PORT")),
+                    t(client,fixed_client_id("publisher", worker_id())),
+                    t(clean_session,true),
+                    t(keepalive_interval,60),
+                    t(username, var("MF_MZBENCH_THING_2_ID")),
+                    t(password, var("MF_MZBENCH_THING_2_KEY")),
+                    t(proto_version,4), t(reconnect_timeout,4)
+                    ])
+
+            set_signal(connect1, 1)
+            # wait with publishing until all ready
+            wait_signal(connect1, numvar("MF_MZBENCH_PUB_NUM"))
+            wait(5 sec)
+            loop(time = numvar("MF_MZBENCH_PUB_TIME") min, rate = comb(1 rps, 1 min, 0 rps, 9 min)):
+                publish_to_self(sprintf("channels/~s/messages/", [var("MF_MZBENCH_CHANNEL_ID")]), random_binary(numvar("MF_MZBENCH_MSG_SIZE")), numvar("MF_MZBENCH_QOS"))
+            disconnect()

@@ -72,7 +72,7 @@ A prerequisite for running 1-to-1 test scenarios is to have Mainflux instance wh
 |--------------------------|--------------------------------------------------------------------------------------------------|-----------|
 | MF_MZBENCH_MQTT_ENDPOINT | IP/domain of MQTT endpoint on Mainflux                                                           | 127.0.0.1 |
 | MF_MZBENCH_MQTT_PORT     | Port of MQTT endpoint on Mainflux                                                                | 1883      |
-| MF_MZBENCH_PUB_NUM       | Number of publishers                                                                             | 1000     |
+| MF_MZBENCH_PUB_NUM       | Number of publishers                                                                             | 1000      |
 | MF_MZBENCH_PUB_RATE      | Message rate per publihser in rps. Number of messages that every publisher is sending per second | 1         |
 | MF_MZBENCH_PUB_TIME      | Duration of publishing messages in minutes                                                       | 5         |
 | MF_MZBENCH_MSG_SIZE      | Size of messages in bytes. Messages are a sequence of random bytes                               | 100       |

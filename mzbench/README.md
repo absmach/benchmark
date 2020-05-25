@@ -6,8 +6,9 @@ Folder [scenarios](scenarios/) contains .bdl files ([Benchmark Definition Langua
 List of scenarios that we will test.
 - [Fan-in](scenarios/fan_in.bdl)
 - [Fan-out](scenarios/fan_out.bdl)
+- [1-to-1](scenarios/1to1.bdl)
 
-A prerequisite for running these test scenarios is to have Mainflux instance where you should:
+A prerequisite for running Fan-in and Fan-out test scenarios is to have Mainflux instance where you should:
 - Create one Channel
 - Create two Things
 - Connect both Things to Channel
@@ -55,4 +56,24 @@ In [fan-out](https://en.wikipedia.org/wiki/Fan-out) scenario one MQTT client is 
 | MF_MZBENCH_MSG_SIZE  | Size of messages in bytes. Messages are a sequence of random bytes           | 100     |
 | MF_MZBENCH_QOS       | MQTT QoS level                                                               | 2       |
 
+## 1-to-1
 
+In 1-to-1 test numerous clients subscribe to an exclusive Mainflux channel and the same clients send messages on that channel to themselves.
+
+A prerequisite for running 1-to-1 test scenarios is to have Mainflux instance where you should:
+- Create 10K Things (or some other size that will go in MF_MZBENCH_PUB_NUM environment variable)
+- Create same number of Channels
+- Create JSON array of Things' IDs in file `things_id.json`
+- Create JSON array of corresponding Things' keys in file `things_key.json`
+- Create JSON array of corresponding Cahnnels' IDs in file `channels_id.json`
+- First Thing from list should be connected to first Channel, second Thing should be connected to second Channel and so on. Checkout [Mainflux provisioning tool](https://github.com/mainflux/mainflux/tree/master/tools/provision) to help you achieve this.
+
+| Environment variable     | Description                                                                                      | Default   |
+|--------------------------|--------------------------------------------------------------------------------------------------|-----------|
+| MF_MZBENCH_MQTT_ENDPOINT | IP/domain of MQTT endpoint on Mainflux                                                           | 127.0.0.1 |
+| MF_MZBENCH_MQTT_PORT     | Port of MQTT endpoint on Mainflux                                                                | 1883      |
+| MF_MZBENCH_PUB_NUM       | Number of publishers                                                                             | 10000     |
+| MF_MZBENCH_PUB_RATE      | Message rate per publihser in rps. Number of messages that every publisher is sending per second | 1         |
+| MF_MZBENCH_PUB_TIME      | Duration of publishing messages in minutes                                                       | 5         |
+| MF_MZBENCH_MSG_SIZE      | Size of messages in bytes. Messages are a sequence of random bytes                               | 100       |
+| MF_MZBENCH_QOS           | MQTT QoS level                                                                                   | 2         |

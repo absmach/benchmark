@@ -50,7 +50,7 @@ pool(size =  numvar("MF_MZBENCH_PUB_NUM"),
             wait(1 sec)
             subscribe(sprintf("channels/~s/messages", [round_robin(resource(channels_id))]), numvar("MF_MZBENCH_QOS"))
             set_signal(pool1, 1)
-            wait_signal(pool1,  numvar("MF_MZBENCH_PUB_NUM"))
+            wait_signal(pool1, numvar("MF_MZBENCH_PUB_NUM"))
             loop(time = numvar("MF_MZBENCH_PUB_TIME") min, rate = numvar("MF_MZBENCH_PUB_RATE") rps):
                 publish(sprintf("channels/~s/messages", [round_robin(resource(channels_id))]), random_binary(numvar("MF_MZBENCH_MSG_SIZE")), numvar("MF_MZBENCH_QOS"))
             disconnect()

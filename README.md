@@ -55,6 +55,7 @@ All those layers and network hops add extra delays and milliseconds are importan
 Here is a list of scenarios that we will test.
 - [Fan in](mzbench/scenarios/fan_in.bdl)
 - [Fan out](mzbench/scenarios/fan_out.bdl)
+- [1 to 1](mzbench/scenarios/1to1.bdl)
 
 ## Results
 Kubernetes is a defacto standard for production-grade container orchestration, that's why we use Kubernetes in all our test environments with all scenarios. 

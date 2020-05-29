@@ -54,7 +54,7 @@ No message loss was detected.
 
 ---
 > Useful facts: 
->* 95% of clients had latency from 82ms up to 84ms
+>* 95% of clients had latency from 89ms up to 93ms
 >* Max latency was up to 440ms
 
 ---
@@ -62,6 +62,11 @@ No message loss was detected.
 ![DO 1-to-1 2.5k QoS 2 Pub to Sub latency](assets/DO/1-to-1-2.5k-qos2-pub-sub-lat.png "DO 1-to-1 2.5k QoS 2 Pub to Sub latency")
 
 *Pub to sub latency in microseconds (100k microseconds are 100 milliseconds) *
+
+---
+> Useful facts: 
+>* 95% of clients had latency from 91ms up to 94ms
+>* Max latency was up to 440ms
 
 ---
 

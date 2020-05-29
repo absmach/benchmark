@@ -25,7 +25,8 @@ RPS: 1
 QoS Level: 2
 
 In 1-to-1 test 2500 clients subscribe to an exclusive Mainflux channel and the same clients send one message every second on that channel to themselves.
-Both publishers and subcribers are connected with QoS 2, which is the safest and most demanding quality of service level that guarantees that each message is received only once by the intended recipients by using aa four-part handshake.
+Both publishers and subcribers are connected with QoS 2, which is the safest and most demanding quality of service level that guarantees that each message is received exactly once by the intended recipients by using a four-part handshake.
+
 No message loss was detected.
 
 **NOTE:** Graphs Time unit is microsecond.
@@ -36,7 +37,7 @@ No message loss was detected.
 
 ---
 
-![DO 1-to-1 2.5k QoS 2 Total messages PRS](assets/DO/1-to-1-2.5k-qos2-totalmsg.png "DO 1-to-1 2.5k QoS 2 Total messages")
+![DO 1-to-1 2.5k QoS 2 Total sent messages](assets/DO/1-to-1-2.5k-qos2-totalmsg.png "DO 1-to-1 2.5k QoS 2 Total sent messages")
 ![DO 1-to-1 2.5k QoS 2 Total received messages](assets/DO/1-to-1-2.5k-qos2-totalmsg-rec.png "DO 1-to-1 2.5k QoS 2 Total received messages")
 
 *We see total number of published and consumed messages is the same*
@@ -60,7 +61,7 @@ No message loss was detected.
 
 ---
 
-![DO 1-to-1 2.5k QoS 2 Pub to Sub latency](assets/DO/1-to-1-2.5k-qos2-pub-sub-lat.png "DO 1-to-1 2.5k QoS 2 Pub to Sub latency")
+![DO Fan-out 1k QoS 2 Pub to Sub latency](assets/DO/fan-out-1k-qos2-pub-sub-lat.png "DO Fan-out 1k QoS 2 Pub to Sub latency")
 
 *Pub to sub latency in microseconds (100k microseconds are 100 milliseconds) *
 
@@ -100,11 +101,11 @@ Results metrics
 
 ![DO 1-to-1 2.5k QoS 2 - Memory usage on MQTT statefulset](assets/DO/1-to-1-2.5k-qos2-mem-usage-mqtt.png "DO 1-to-1 2.5k QoS 2 - Memory usage on MQTT statefulset")
 
-*Kubernetes Memory usage in MQTT statefulset namespace during testing*
+*Kubernetes Memory usage in MQTT statefulset during testing*
 
 ---
 
 ![DO 1-to-1 2.5k QoS 2 - Networking on MQTT statefulset](assets/DO/1-to-1-2.5k-qos2-networking-mqtt.png "DO 1-to-1 2.5k QoS 2 - Networking on MQTT statefulset")
 
-*Kubernetes Network receive/transmit bandwidth in MQTT statefulset namespace during testing*
+*Kubernetes Network receive/transmit bandwidth in MQTT statefulset during testing*
 

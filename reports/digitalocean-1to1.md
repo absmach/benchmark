@@ -48,20 +48,20 @@ No message loss was detected.
 
 ---
 
-![DO 1-to-1 2.5k QoS 2 Publish to Pubrec latency](assets/DO/1-to-1-2.5k-qos2-pub-sub-lat.png "DO 1-to-1 2.5k QoS 2 Pub to Sub latency")
+![DO 1-to-1 2.5k QoS 2 Publish to Pubrec latency](assets/DO/1-to-1-2.5k-qos2-publishers-pub-pubrec-latency.png "DO 1-to-1 2.5k QoS 2 Pub to Sub latency")
 
 *Pub to Pubrec latency in microseconds (100k microseconds are 100 milliseconds) *
+
+---
+> Useful facts: 
+>* 95% of clients had latency from 82ms up to 84ms
+>* Max latency was up to 440ms
 
 ---
 
 ![DO 1-to-1 2.5k QoS 2 Pub to Sub latency](assets/DO/1-to-1-2.5k-qos2-pub-sub-lat.png "DO 1-to-1 2.5k QoS 2 Pub to Sub latency")
 
 *Pub to sub latency in microseconds (100k microseconds are 100 milliseconds) *
-
----
-> Useful facts: 
->* 95% of clients had latency from 82ms up to 84ms
->* Max latency was up to 440ms
 
 ---
 

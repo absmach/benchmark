@@ -25,6 +25,7 @@ RPS: 1
 QoS Level: 2
 
 In 1-to-1 test 2500 clients subscribe to an exclusive Mainflux channel and the same clients send one message every second on that channel to themselves.
+Both publishers and subcribers are connected with QoS 2, which is the safest and most demanding quality of service level that guarantees that each message is received only once by the intended recipients by using aa four-part handshake.
 No message loss was detected.
 
 **NOTE:** Graphs Time unit is microsecond.
@@ -54,7 +55,7 @@ No message loss was detected.
 
 ---
 > Useful facts: 
->* 95% of clients had latency from 89ms up to 93ms
+>* 95% of clients had latency up to 93ms
 >* Max latency was up to 440ms
 
 ---
@@ -65,7 +66,7 @@ No message loss was detected.
 
 ---
 > Useful facts: 
->* 95% of clients had latency from 91ms up to 94ms
+>* 95% of clients had latency up to 94ms
 >* Max latency was up to 440ms
 
 ---
@@ -79,13 +80,13 @@ Results metrics
 ---
 
 ### Kubernetes Cluster resources insights
-![DO 1-to-1 2.5k QoS 2 - CPU usage on namespace](assets/DO/1-to-1-2.5k-qos2-cpu-usage-namespace.png "DO 1-to-1 2.5k QoS 2 - CPU usage on namespace")
+![DO 1-to-1 2.5k QoS 2 - CPU usage on namespace](assets/DO/1-to-1-2.5k-qos2-cpu-usage-namespace-wo-jaeger.png "DO 1-to-1 2.5k QoS 2 - CPU usage on namespace")
 
 *Kubernetes CPU usage in whole Mainflux namespace during testing*
 
 ---
 
-![DO 1-to-1 2.5k QoS 2 - Memory usage on namespace](assets/DO/1-to-1-2.5k-qos2-mem-usage-namespace.png "DO 1-to-1 2.5k QoS 2 - Memory usage on namespace")
+![DO 1-to-1 2.5k QoS 2 - Memory usage on namespace](assets/DO/1-to-1-2.5k-qos2-mem-usage-namespace-wo-jaeger.png "DO 1-to-1 2.5k QoS 2 - Memory usage on namespace")
 
 *Kubernetes Memory usage in whole Mainflux namespace during testing*
 
@@ -103,6 +104,7 @@ Results metrics
 
 ---
 
-![DO 1-to-1 2.5k QoS 2 - Networking on MQTT statefulset](assets/DO/1-to-1-2.5k-qos2-mem-usage-mqtt.png "DO 1-to-1 2.5k QoS 2 - Networking on MQTT statefulset")
+![DO 1-to-1 2.5k QoS 2 - Networking on MQTT statefulset](assets/DO/1-to-1-2.5k-qos2-networking-mqtt.png "DO 1-to-1 2.5k QoS 2 - Networking on MQTT statefulset")
+
 *Kubernetes Network receive/transmit bandwidth in MQTT statefulset namespace during testing*
 

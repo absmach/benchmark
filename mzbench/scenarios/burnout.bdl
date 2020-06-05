@@ -1,6 +1,26 @@
+
+#######
+# Burnout Scenario:
+# A single subscriber reading from "channels/<MF_MZBENCH_CHANNEL_ID>/messages/#" topic
+# MF_MZBENCH_PUB_NUM of publishers publishing to exclusive topic "channels/<MF_MZBENCH_CHANNEL_ID>/messages/<client_id>"
+# Overall Msg rate: message rate is comb function, publishing for 1 min, each publisher with rate 1msg/s then pause for 9 min
+# Message Size: 100 random bytes
+# Runtime: 300 min
+# QoS level: 2
+# NOTE: Scenario's values can be changed with environment variables predefined in defaults
+# Set environment variables to connect to Mainflux instance:
+# MF_MZBENCH_MQTT_ENDPOINT = IP/domain of MQTT endpoint on Mainflux
+# MF_MZBENCH_MQTT_PORT = Port of MQTT endpoint on Mainflux
+# MF_MZBENCH_THING_1_ID = First thing ID of pre-provisioned Mainflux thing
+# MF_MZBENCH_THING_1_KEY = First thing key of pre-provisioned Mainflux thing
+# MF_MZBENCH_THING_2_ID = Second thing ID of pre-provisioned Mainflux thing
+# MF_MZBENCH_THING_2_KEY = Second thing key of pre-provisioned Mainflux thing.
+# MF_MZBENCH_CHANNEL_ID = ID of pre-provisioned channel on which both things are connected
+#######
+
 defaults(
         "MF_MZBENCH_PUB_NUM" = 10000,
-        "MF_MZBENCH_PUB_TIME" = 5,
+        "MF_MZBENCH_PUB_TIME" = 300,
         "MF_MZBENCH_PUB_RATE" = 1,
         "MF_MZBENCH_MSG_SIZE" = 100,
         "MF_MZBENCH_QOS" = 2,
@@ -12,7 +32,7 @@ make_install(git = "https://github.com/erlio/vmq_mzbench.git",
              branch = "master")
 
 
-pool(size = 2,
+pool(size = 1,
      worker_type = mqtt_worker):
             connect([t(host, var("MF_MZBENCH_MQTT_ENDPOINT")),
                     t(port, numvar("MF_MZBENCH_MQTT_PORT")),

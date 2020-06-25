@@ -3,7 +3,7 @@
 # Burnout Scenario:
 # A single subscriber reading from "channels/<MF_MZBENCH_CHANNEL_ID>/messages/#" topic
 # MF_MZBENCH_PUB_NUM of publishers publishing to exclusive topic "channels/<MF_MZBENCH_CHANNEL_ID>/messages/<client_id>"
-# Overall Msg rate: message rate is comb function, publishing for 1 min, each publisher with rate 1msg/s then pause for 9 min
+# Overall Msg rate: message rate is comb function, publishing for 2 min, each publisher with rate 1msg/s then pause for 8 min
 # Message Size: 100 random bytes
 # Runtime: 300 min
 # QoS level: 2
@@ -68,7 +68,7 @@ pool(size = numvar("MF_MZBENCH_PUB_NUM"),
             # wait with publishing until all ready
             wait_signal(connect1, numvar("MF_MZBENCH_PUB_NUM"))
             wait(5 sec)
-            loop(time = numvar("MF_MZBENCH_PUB_TIME") min, rate = comb(1 rps, 1 min, 0 rps, 9 min)):
+            loop(time = numvar("MF_MZBENCH_PUB_TIME") min, rate = comb(1 rps, 2 min, 0 rps, 8 min)):
                 publish_to_self(sprintf("channels/~s/messages/", [var("MF_MZBENCH_CHANNEL_ID")]), random_binary(numvar("MF_MZBENCH_MSG_SIZE")), numvar("MF_MZBENCH_QOS"))
             disconnect()
 

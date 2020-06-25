@@ -31,7 +31,6 @@ defaults(
 make_install(git = "https://github.com/erlio/vmq_mzbench.git",
              branch = "master")
 
-
 pool(size = 1,
      worker_type = mqtt_worker):
             connect([t(host, var("MF_MZBENCH_MQTT_ENDPOINT")),
@@ -72,3 +71,4 @@ pool(size = numvar("MF_MZBENCH_PUB_NUM"),
             loop(time = numvar("MF_MZBENCH_PUB_TIME") min, rate = comb(1 rps, 1 min, 0 rps, 9 min)):
                 publish_to_self(sprintf("channels/~s/messages/", [var("MF_MZBENCH_CHANNEL_ID")]), random_binary(numvar("MF_MZBENCH_MSG_SIZE")), numvar("MF_MZBENCH_QOS"))
             disconnect()
+

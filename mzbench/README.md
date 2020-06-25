@@ -7,6 +7,7 @@ List of scenarios that we will test.
 - [Fan-in](scenarios/fan_in.bdl)
 - [Fan-out](scenarios/fan_out.bdl)
 - [1-to-1](scenarios/1to1.bdl)
+- [Burnout](scenarios/burnout.bdl)
 
 A prerequisite for running Fan-in and Fan-out test scenarios is to have Mainflux instance where you should:
 - Create one Channel
@@ -77,3 +78,6 @@ A prerequisite for running 1-to-1 test scenarios is to have Mainflux instance wh
 | MF_MZBENCH_PUB_TIME      | Duration of publishing messages in minutes                                                       | 5         |
 | MF_MZBENCH_MSG_SIZE      | Size of messages in bytes. Messages are a sequence of random bytes                               | 100       |
 | MF_MZBENCH_QOS           | MQTT QoS level                                                                                   | 2         |
+
+## Burnout 
+Burnout test is similar to the `Fan-In` just that message rate function is `comb` not a constant. Test is intended to be run for a long period of time to detect possible resource problem in deployment. By default it runs for 300 min, publishing for 1 min and then pause for 9 min.

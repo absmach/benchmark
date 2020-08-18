@@ -62,7 +62,7 @@ Kubernetes is a defacto standard for production-grade container orchestration, t
 Testing is done on different infrastructures, regarding cluster resources, a number of nodes,  compute power, etc... with different cloud providers.
 Each report contains details about cluster resources, testing scenario, test report and rough monthly cost estimate (its impossible to do precise costs estimation due to variable costs and use case details).
 
-- [x] [Digitalocean Kubernetes](https://www.digitalocean.com/products/kubernetes/). Detailed report available [here](reports/digitalocean.md)
+- [x] [Digitalocean Kubernetes](https://www.digitalocean.com/products/kubernetes/). Detailed report available [here](reports/README.md)
 - [ ] [Google GKE](https://cloud.google.com/kubernetes-engine)
 - [ ] [AWS EKS](https://aws.amazon.com/eks/)
 

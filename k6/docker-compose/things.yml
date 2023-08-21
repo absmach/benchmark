@@ -1,0 +1,19 @@
+version: "3"
+
+networks:
+  mainflux-k6-bechmark_prometheus:
+    external: true
+
+services:
+  mainflux-k6-things:
+    image: ghcr.io/rodneyosodo/mf-benchmark
+    container_name: mainflux-k6-benchmark-things
+    command: "run /scripts/things.tar --tag testid=things-2023-08-21-11-05-51"
+    volumes:
+      - ../scripts:/scripts
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=${MF_K6_PROMETHEUS_RW_SERVER_URL}
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=${MF_K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM}
+      - K6_OUT=${MF_K6_OUT}
+    networks:
+      - mainflux-k6-bechmark_prometheus

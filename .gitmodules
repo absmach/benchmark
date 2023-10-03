@@ -1,0 +1,6 @@
+[submodule "k6/dependencies/xk6-output-prometheus-remote"]
+	path = k6/dependencies/xk6-output-prometheus-remote
+	url = https://github.com/grafana/xk6-output-prometheus-remote.git
+[submodule "k6/dependencies/k6-operator"]
+	path = k6/dependencies/k6-operator
+	url = https://github.com/grafana/k6-operator.git

@@ -1,0 +1,7 @@
+.git/
+.github/
+build/
+cmd/
+k6/
+vendor/
+reports/

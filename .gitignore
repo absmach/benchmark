@@ -1,2 +1,6 @@
 .env
 server.config
+
+build/
+*.tar
+*.json

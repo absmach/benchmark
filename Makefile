@@ -6,27 +6,28 @@ GOARCH=amd64
 GOARM=7
 BUILD_DIR=build
 DATE_TIME=$(shell date +'%Y-%m-%d-%H-%M-%S')
+VERSION ?= $(shell git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0")
 
 clone-deps:
 	rm -rf k6/dependencies && \
 	git clone https://github.com/grafana/xk6-output-prometheus-remote.git k6/dependencies/xk6-output-prometheus-remote && \
 	git clone https://github.com/grafana/k6-operator.git k6/dependencies/k6-operator
 
-prometheus-up:
+install-xk6:
+	go install go.k6.io/xk6/cmd/xk6@latest
+
+build-k6:
+	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) GOARM=$(GOARM) \
+	xk6 build --with github.com/grafana/xk6-output-prometheus-remote \
+	--output $(BUILD_DIR)/k6
+	
+start-prometheus:
 	cd k6/dependencies/xk6-output-prometheus-remote && \
 	docker compose -f docker-compose.yml -p mainflux-k6-bechmark up -d
 
-prometheus-down:
+stop-prometheus:
 	cd k6/dependencies/xk6-output-prometheus-remote && \
 	docker compose -f docker-compose.yml -p mainflux-k6-bechmark down -v
-
-build-k6:
-	go install go.k6.io/xk6/cmd/xk6@latest
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) GOARM=$(GOARM) \
-	xk6 build --with github.com/grafana/xk6-output-prometheus-remote \
-	--with github.com/golioth/xk6-coap --with github.com/grafana/xk6-timers \
-	--with github.com/pmalhaire/xk6-mqtt \
-	--output $(BUILD_DIR)/k6
 
 define compile_service
 	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) GOARM=$(GOARM) \
@@ -49,10 +50,12 @@ docker-build:
 		--build-arg GOARM=$(GOARM) \
 		--build-arg GOOS=$(GOOS) \
 		--build-arg CGO_ENABLED=$(CGO_ENABLED) \
-		--tag ghcr.io/rodneyosodo/mf-benchmark:latest .
+		--tag ghcr.io/rodneyosodo/mf-bechmark:lastest \
+		--tag ghcr.io/rodneyosodo/mf-benchmark:$(VERSION) .
 
 docker-push:
-	docker push ghcr.io/rodneyosodo/mf-benchmark:latest
+	docker push ghcr.io/rodneyosodo/mf-bechmark:lastest
+	docker push ghcr.io/rodneyosodo/mf-benchmark:$(VERSION)
 
 define build_archive
 	./build/k6 archive --include-system-env-vars --env MF_BENCH_ENVIRONMENT=$(MF_BENCH_ENVIRONMENT) \
@@ -125,12 +128,3 @@ run-k6: run-k6-users run-k6-things
 
 run-k6-%: build-archive-%
 	$(call run_k6,$*)
-
-# define run_k8
-# 	kubectl apply -n k6-demo -f k6/resources/$(1).yml
-# endef
-
-# run-k8: run-k8-users run-k8-things
-
-# run-k8-%:
-# 	$(call run_k8,$*)

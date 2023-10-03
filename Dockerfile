@@ -1,4 +1,4 @@
-FROM golang:1.20.5-alpine as builder
+FROM golang:1.21.0-alpine as builder
 
 ARG GOARCH
 ARG GOARM
@@ -7,9 +7,8 @@ ARG CGO_ENABLED
 
 WORKDIR $GOPATH/src/github.com/mainflux/benchmark
 ADD Makefile .
-RUN apk update
-RUN apk add git make
-RUN make build-k6
+RUN apk update && apk add git make
+RUN make install-xk6 build-k6
 RUN mv build/k6 /tmp/k6
 
 FROM alpine:3.18.3
